@@ -3,7 +3,13 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./config/db.js";
+
+// Routes
 import authRoutes from "./routes/authRoutes.js";
+import candidateRoutes from "./routes/candidateRoutes.js";
+import employeeRoutes from "./routes/employeeRoutes.js";
+import attendanceRoutes from "./routes/attendanceRoutes.js";
+import leaveRoutes from "./routes/leaveRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -15,8 +21,8 @@ app.use(cookieParser());
 // CORS config
 const allowedOrigin =
   process.env.NODE_ENV === "production"
-    ? "https://hr-dashboard-frontend-ivory.vercel.app"
-    : "http://localhost:5173";
+    ? process.env.CLIENT_ORIGIN || "https://hr-dashboard-frontend-ivory.vercel.app"
+    : process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
 app.use(
   cors({
@@ -29,8 +35,12 @@ app.options("*", cors({ origin: allowedOrigin, credentials: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/candidates", candidateRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/leaves", leaveRoutes);
 
-app.get("/", (req, res) => res.send("✅ Backend running"));
+app.get("/", (_req, res) => res.send("✅ Backend running"));
 
 const PORT = process.env.PORT || 5000;
 

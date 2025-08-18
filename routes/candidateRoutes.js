@@ -1,6 +1,5 @@
-
 import express from "express";
-import { protect, requireRole } from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js";
 import {
   listCandidates,
   createCandidate,
@@ -13,18 +12,13 @@ import { uploadResume } from "../middleware/upload.js";
 
 const router = express.Router();
 
+
 router.use(protect);
 
 router.get("/", listCandidates);
-router.post("/", requireRole("HR"), uploadResume.single("resume"), candidateValidator, createCandidate);
+router.post("/", uploadResume.single("resume"), candidateValidator, createCandidate);
 router.get("/:id", getCandidate);
-router.delete("/:id", requireRole("HR"), deleteCandidate);
-router.post("/:id/move-to-employee", requireRole("HR"), moveToEmployee);
-router.stack.forEach(r => {
-  if (r.route && r.route.path) {
-    console.log("Loaded route in <filename>: ", r.route.path);
-  }
-});
-
+router.delete("/:id", deleteCandidate);
+router.post("/:id/move-to-employee", moveToEmployee);
 
 export default router;
