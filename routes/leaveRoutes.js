@@ -19,11 +19,7 @@ router.post("/", uploadDoc.single("doc"), createLeave);
 router.get("/calendar/approved", getApprovedLeavesForCalendar);
 
 router.put("/:id/status", requireRole("HR"), updateLeaveStatus);
-router.stack.forEach(r => {
-  if (r.route && r.route.path) {
-    console.log("Loaded route in <filename>: ", r.route.path);
-  }
-});
+
 
 
 

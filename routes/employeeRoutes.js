@@ -17,11 +17,7 @@ router.post("/", requireRole("HR"), createEmployee);
 router.get("/:id", getEmployee);
 router.put("/:id", requireRole("HR"), updateEmployee);
 router.delete("/:id", requireRole("HR"), deleteEmployee);
-router.stack.forEach(r => {
-  if (r.route && r.route.path) {
-    console.log("Loaded route in <filename>: ", r.route.path);
-  }
-});
+
 
 
 export default router;
