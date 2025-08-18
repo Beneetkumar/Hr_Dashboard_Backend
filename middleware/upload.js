@@ -1,4 +1,4 @@
-// middleware/upload.js
+
 import multer from "multer";
 import fs from "fs";
 import path from "path";
@@ -7,7 +7,6 @@ const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
-// resumes storage
 const resumesDir = path.join(process.cwd(), "uploads", "resumes");
 ensureDir(resumesDir);
 
@@ -29,7 +28,7 @@ const fileFilterPdf = (req, file, cb) => {
 
 export const uploadResume = multer({ storage: storageResumes, fileFilter: fileFilterPdf });
 
-// generic docs (for leaves) - accept pdf and images
+
 const docsDir = path.join(process.cwd(), "uploads", "docs");
 ensureDir(docsDir);
 

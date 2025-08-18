@@ -1,4 +1,4 @@
-// routes/employeeRoutes.js
+
 import express from "express";
 import { protect, requireRole } from "../middleware/authMiddleware.js";
 import {

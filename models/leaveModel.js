@@ -1,4 +1,4 @@
-// models/leaveModel.js
+
 import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema(
@@ -9,7 +9,7 @@ const leaveSchema = new mongoose.Schema(
     reason: { type: String },
     type: { type: String, enum: ["Sick", "Casual", "Paid"], required: true },
     status: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" },
-    docsUrl: { type: String }, // optional docs
+    docsUrl: { type: String }, 
   },
   { timestamps: true }
 );

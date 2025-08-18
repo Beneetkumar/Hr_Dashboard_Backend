@@ -1,7 +1,7 @@
-// controllers/employeeController.js
+
 import Employee from "../models/employeeModel.js";
 
-// GET /api/employees?search=&page=&limit=&status=
+
 export const listEmployees = async (req, res) => {
   try {
     const page = Number(req.query.page || 1);

@@ -1,4 +1,4 @@
-// server.js
+
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -14,11 +14,10 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import leaveRoutes from "./routes/leaveRoutes.js";
 
 dotenv.config();
-await connectDB();
 
 const app = express();
 
-// body parsers
+
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,19 +29,32 @@ app.use(
   })
 );
 
-// make uploads accessible to frontend
+
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// routes
+
 app.use("/api/auth", authRoutes);
 app.use("/api/candidates", candidateRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
 
-// error handlers
+
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () =>
+      console.log(` Server running on port ${PORT}`)
+    );
+  } catch (err) {
+    console.error(" Failed to start server:", err.message);
+    process.exit(1);
+  }
+};
+
+startServer();

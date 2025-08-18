@@ -1,4 +1,4 @@
-// models/attendanceModel.js
+
 import mongoose from "mongoose";
 
 const attendanceSchema = new mongoose.Schema(
@@ -10,7 +10,7 @@ const attendanceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// unique attendance per employee per date
+
 attendanceSchema.index({ employee: 1, date: 1 }, { unique: true });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);

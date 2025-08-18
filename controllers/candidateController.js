@@ -1,9 +1,9 @@
-// controllers/candidateController.js
+
 import Candidate from "../models/candidateModel.js";
 import Employee from "../models/employeeModel.js";
 import { validationResult } from "express-validator";
 
-// GET /api/candidates?search=...&page=1&limit=20
+
 export const listCandidates = async (req, res) => {
   try {
     const page = Number(req.query.page || 1);
@@ -73,7 +73,6 @@ export const moveToEmployee = async (req, res) => {
     const cand = await Candidate.findById(req.params.id);
     if (!cand) return res.status(404).json({ message: "Candidate not found" });
 
-    // create employee
     const emp = await Employee.create({
       name: cand.name,
       email: cand.email,
@@ -83,7 +82,6 @@ export const moveToEmployee = async (req, res) => {
       role: "Staff",
     });
 
-    // delete candidate
     await cand.deleteOne();
 
     res.json({ message: "Candidate moved to employee", employee: emp });

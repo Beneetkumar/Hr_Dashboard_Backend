@@ -1,8 +1,8 @@
-// controllers/attendanceController.js
+
 import Attendance from "../models/attendanceModel.js";
 import Employee from "../models/employeeModel.js";
 
-// GET /api/attendance?employee=&date=&status=&page=&limit=&onlyPresent=true
+
 export const listAttendance = async (req, res) => {
   try {
     const page = Number(req.query.page || 1);
@@ -21,16 +21,16 @@ export const listAttendance = async (req, res) => {
 
     if (req.query.status) q.status = req.query.status;
 
-    // Find attendance records + populate minimal employee info
+
     let items = await Attendance.find(q)
       .sort({ date: -1 })
       .skip(skip)
       .limit(limit)
-      .populate("employee", "name email employmentStatus"); // ✅ only needed fields
+      .populate("employee", "name email employmentStatus");
 
     const total = await Attendance.countDocuments(q);
 
-    // Filter only employees whose status is Present (if query param asked for it)
+
     if (req.query.onlyPresent === "true") {
       items = items.filter((a) => a.employee && a.employee.employmentStatus === "Present");
     }
@@ -46,7 +46,7 @@ export const listAttendance = async (req, res) => {
   }
 };
 
-// POST /api/attendance
+
 export const createAttendance = async (req, res) => {
   try {
     const { employee: employeeId, date, status } = req.body;
@@ -58,26 +58,24 @@ export const createAttendance = async (req, res) => {
     const emp = await Employee.findById(employeeId);
     if (!emp) return res.status(404).json({ message: "Employee not found" });
 
-    // Only HR can mark absent/half-day for employees not "Present"
     if (req.user?.role !== "HR" && emp.employmentStatus !== "Present") {
       return res.status(403).json({ message: "Not allowed to mark attendance for non-present employees" });
     }
 
     const attDate = new Date(date);
-    attDate.setHours(0, 0, 0, 0); // normalize
+    attDate.setHours(0, 0, 0, 0); 
 
-    // Check duplicate
+ 
     const exists = await Attendance.findOne({ employee: emp._id, date: attDate });
     if (exists) return res.status(400).json({ message: "Attendance already marked for this date" });
 
-    // Create record
     const doc = await Attendance.create({
       employee: emp._id,
       date: attDate,
       status: status || "Present",
     });
 
-    // Populate employee name before sending response
+
     const populatedDoc = await doc.populate("employee", "name email employmentStatus");
 
     res.status(201).json(populatedDoc);

@@ -1,4 +1,4 @@
-// models/candidateModel.js
+
 import mongoose from "mongoose";
 
 const candidateSchema = new mongoose.Schema(
@@ -7,7 +7,7 @@ const candidateSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: false },
     phone: { type: String, required: true },
     position: { type: String },
-    resumeUrl: { type: String }, // like /uploads/resumes/xxx.pdf
+    resumeUrl: { type: String }, 
   },
   { timestamps: true }
 );

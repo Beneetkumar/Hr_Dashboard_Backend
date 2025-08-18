@@ -1,8 +1,8 @@
-// controllers/leaveController.js
+
 import Leave from "../models/leaveModel.js";
 import Employee from "../models/employeeModel.js";
 
-// GET /api/leaves?search=&status=&page=&limit=
+
 export const listLeaves = async (req, res) => {
   try {
     const page = Number(req.query.page || 1);
@@ -11,10 +11,10 @@ export const listLeaves = async (req, res) => {
 
     const q = {};
 
-    // filter by status
+   
     if (req.query.status) q.status = req.query.status;
 
-    // search by employee name (case-insensitive)
+
     if (req.query.search) {
       const employees = await Employee.find({
         name: { $regex: req.query.search, $options: "i" },
@@ -40,7 +40,7 @@ export const listLeaves = async (req, res) => {
   }
 };
 
-// POST /api/leaves
+
 export const createLeave = async (req, res) => {
   try {
     const { employee: employeeId, startDate, endDate, reason, type } = req.body;
@@ -51,7 +51,7 @@ export const createLeave = async (req, res) => {
     const emp = await Employee.findById(employeeId);
     if (!emp) return res.status(400).json({ message: "Employee not found" });
 
-    // Only Present employees can apply (unless HR creates on their behalf)
+   
     if (req.user.role !== "HR" && emp.employmentStatus !== "Present") {
       return res
         .status(400)
@@ -77,8 +77,6 @@ export const createLeave = async (req, res) => {
   }
 };
 
-// PUT /api/leaves/:id/status
-// controllers/leaveController.js
 export const updateLeaveStatus = async (req, res) => {
   try {
     const leave = await Leave.findByIdAndUpdate(

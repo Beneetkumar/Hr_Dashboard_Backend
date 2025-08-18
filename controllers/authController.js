@@ -1,4 +1,4 @@
-// controllers/authController.js
+
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
@@ -6,7 +6,7 @@ const signToken = (id, role = "HR") => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "2h" });
 };
 
-// Register
+
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -16,16 +16,15 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Force HR role
+   
     const user = await User.create({ name, email, password, role: "HR" });
 
     const token = signToken(user._id, "HR");
 
-    // ✅ send token in cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 2 * 60 * 60 * 1000, // 2 hours
+      maxAge: 2 * 60 * 60 * 1000, 
     });
 
     res.status(201).json({
@@ -39,7 +38,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// Login
+
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -68,13 +67,12 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// Logout
+
 export const logoutUser = (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 };
 
-// Get Profile
 export const getProfile = async (req, res) => {
   try {
     res.json({
