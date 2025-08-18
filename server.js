@@ -1,4 +1,3 @@
-
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -17,10 +16,13 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for secure cookies (Render requirement)
+app.set("trust proxy", 1);
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Cookie + CORS setup
 app.use(cookieParser());
 app.use(
   cors({
@@ -29,17 +31,17 @@ app.use(
   })
 );
 
-
+// Static files (note: ephemeral on Render)
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/candidates", candidateRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
 
-
+// Error handling
 app.use(notFound);
 app.use(errorHandler);
 
@@ -49,10 +51,10 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () =>
-      console.log(` Server running on port ${PORT}`)
+      console.log(`✅ Server running on port ${PORT}`)
     );
   } catch (err) {
-    console.error(" Failed to start server:", err.message);
+    console.error("❌ Failed to start server:", err.message);
     process.exit(1);
   }
 };

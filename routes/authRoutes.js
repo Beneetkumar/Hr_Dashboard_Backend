@@ -1,18 +1,16 @@
-
 import express from "express";
-import { registerUser, loginUser, logoutUser, getProfile } from "../controllers/authController.js";
+import { registerUser, loginUser, logoutUser, getProfile, getMe } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Public routes
 router.post("/register", registerUser); 
+router.post("/login", loginUser); 
 router.post("/logout", logoutUser);
+
+// Protected routes
 router.get("/profile", protect, getProfile);
-router.get("/me", (req, res) => {
-  if (req.user) {
-    res.json({ user: req.user });
-  } else {
-    res.status(401).json({ message: "Not authenticated" });
-  }
-});
+router.get("/me", protect, getMe);   // ✅ now uses middleware
+
 export default router;
