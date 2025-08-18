@@ -6,6 +6,7 @@ import path from "path";
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
+// Routes
 import authRoutes from "./routes/authRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import employeeRoutes from "./routes/employeeRoutes.js";
@@ -13,25 +14,22 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import leaveRoutes from "./routes/leaveRoutes.js";
 
 dotenv.config();
-
 const app = express();
 
-// Trust proxy for secure cookies (Render requirement)
-app.set("trust proxy", 1);
-
+// Middleware
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
-
-// Cookie + CORS setup
 app.use(cookieParser());
+
+// ✅ Important: allow only your Vercel frontend domain
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    origin: "https://hr-dashboard-frontend-ivory.vercel.app",
     credentials: true,
   })
 );
 
-// Static files (note: ephemeral on Render)
+// Static uploads folder
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // API Routes
@@ -41,7 +39,7 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
 
-// Error handling
+// Error Handling
 app.use(notFound);
 app.use(errorHandler);
 
@@ -51,7 +49,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () =>
-      console.log(`✅ Server running on port ${PORT}`)
+      console.log(`✅ Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (err) {
     console.error("❌ Failed to start server:", err.message);

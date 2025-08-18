@@ -1,16 +1,29 @@
 import express from "express";
-import { registerUser, loginUser, logoutUser, getProfile, getMe } from "../controllers/authController.js";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getProfile,
+} from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Public routes
-router.post("/register", registerUser); 
-router.post("/login", loginUser); 
+// Register new user
+router.post("/register", registerUser);
+
+// Login
+router.post("/login", loginUser);
+
+// Logout
 router.post("/logout", logoutUser);
 
-// Protected routes
+// Get profile (protected)
 router.get("/profile", protect, getProfile);
-router.get("/me", protect, getMe);   // ✅ now uses middleware
+
+// ✅ Fixed: require auth for /me
+router.get("/me", protect, (req, res) => {
+  res.json({ user: req.user });
+});
 
 export default router;
