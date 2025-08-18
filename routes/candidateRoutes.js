@@ -20,5 +20,11 @@ router.post("/", requireRole("HR"), uploadResume.single("resume"), candidateVali
 router.get("/:id", getCandidate);
 router.delete("/:id", requireRole("HR"), deleteCandidate);
 router.post("/:id/move-to-employee", requireRole("HR"), moveToEmployee);
+router.stack.forEach(r => {
+  if (r.route && r.route.path) {
+    console.log("Loaded route in <filename>: ", r.route.path);
+  }
+});
+
 
 export default router;

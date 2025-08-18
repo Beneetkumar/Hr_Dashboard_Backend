@@ -8,5 +8,11 @@ router.use(protect);
 
 router.get("/", listAttendance);
 router.post("/", requireRole("HR"), createAttendance); 
+router.stack.forEach(r => {
+  if (r.route && r.route.path) {
+    console.log("Loaded route in <filename>: ", r.route.path);
+  }
+});
+
 
 export default router;
