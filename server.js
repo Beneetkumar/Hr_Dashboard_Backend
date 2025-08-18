@@ -18,7 +18,6 @@ const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 
-// CORS config
 const allowedOrigin =
   process.env.NODE_ENV === "production"
     ? process.env.CLIENT_ORIGIN || "https://hr-dashboard-frontend-ivory.vercel.app"
@@ -27,11 +26,9 @@ const allowedOrigin =
 app.use(
   cors({
     origin: allowedOrigin,
-    credentials: true, // ✅ allow cookies
+    credentials: true, 
   })
 );
-
-app.options("*", cors({ origin: allowedOrigin, credentials: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -40,10 +37,11 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
 
-app.get("/", (_req, res) => res.send("✅ Backend running"));
+// Root route (health check)
+app.get("/", (_req, res) => res.send("Backend running"));
 
+// Start server after DB connection
 const PORT = process.env.PORT || 5000;
-
-connectDB().then(() =>
-  app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`))
-);
+connectDB().then(() => {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
