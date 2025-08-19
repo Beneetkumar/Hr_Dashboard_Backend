@@ -18,15 +18,23 @@ const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 
-const allowedOrigin =
-  process.env.NODE_ENV === "production"
-    ? process.env.CLIENT_ORIGIN || "https://hr-dashboard-frontend-ivory.vercel.app"
-    : process.env.CLIENT_ORIGIN || "http://localhost:5173";
+// ✅ Allowed origins for frontend
+const allowedOrigins = [
+  "http://localhost:5173", // dev
+  "https://hr-dashboard-frontend-ivory.vercel.app", // vercel
+];
 
+// ✅ Use CORS with credentials
 app.use(
   cors({
-    origin: allowedOrigin,
-    credentials: true, 
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 
