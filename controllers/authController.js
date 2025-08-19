@@ -7,7 +7,7 @@ const signToken = (id) =>
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  sameSite:"None",
   maxAge: 2 * 60 * 60 * 1000, // 2 hours
 };
 
